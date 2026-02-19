@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { Button } from "@/components/Button";
 import { Link } from "expo-router";
+import { Mood } from "@/components/Mood";
 
 export default function HomeScreen() {
   return (
@@ -14,8 +15,7 @@ export default function HomeScreen() {
       <Text style={styles.heading}>App screen 1</Text>
       <Text>Hello world</Text>
       <Button text="Click Me" background="green" />
-      <Button text="Don't click me" background="red"  />
-      <Button text="I told you not to click" background="brown" />
+      <Mood />
       <Link href="/test">
         <Text>go to another screen</Text>
       </Link>

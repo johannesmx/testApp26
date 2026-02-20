@@ -16,8 +16,8 @@ export default function HomeScreen() {
       <Text>Hello world</Text>
       <Button text="Click Me" background="green" />
       <Mood />
-      <Link href="/test">
-        <Text>go to another screen</Text>
+      <Link href="/signup">
+        <Text>go to signup</Text>
       </Link>
     </View>
   );

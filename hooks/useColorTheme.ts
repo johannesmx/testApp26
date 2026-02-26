@@ -4,12 +4,12 @@ import { AppTheme } from "../constants/AppTheme"
 import { AppThemeInterface } from "../constants/AppTheme";
 
 export function useColorTheme () {
-    const [theme, setTheme] = useState(AppTheme.light)
+    let theme = AppTheme.light
     // let theme = AppTheme.light
     const scheme = useColorScheme()
     if( scheme == "dark") {
-        setTheme( AppTheme.dark )
+        theme = AppTheme.dark
     }
-    // return theme
+    return theme
     
 }

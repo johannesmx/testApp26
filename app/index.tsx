@@ -3,6 +3,7 @@ import { Button } from "@/components/Button";
 import { Link } from "expo-router";
 import { Mood } from "@/components/Mood";
 import { useColorTheme } from "@/hooks/useColorTheme";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function HomeScreen() {
   const theme = useColorTheme()
@@ -17,6 +18,7 @@ export default function HomeScreen() {
       }}
     >
       <Text style={[ styles.heading, {color: theme.text}]}>App screen 1</Text>
+      <ThemedText>Hey there</ThemedText>
       <Text>Hello world</Text>
       <Button text="Click Me" background="green" />
       <Mood />

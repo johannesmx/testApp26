@@ -63,8 +63,8 @@ export default function SignupScreen() {
                         Signup
                 </Text>
             </Pressable>
-            <Link href="/login">
-                Have an account? Go to Login
+            <Link href="/">
+                Don't have an account? Go to Signup
             </Link>
             </View>
         </View>

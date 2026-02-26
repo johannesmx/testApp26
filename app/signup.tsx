@@ -1,36 +1,75 @@
 import {View,StyleSheet,Text,TextInput,Pressable} from 'react-native'
 import {useState,useEffect} from 'react'
+import { ValidationState } from '@/constants/ValidationState'
+import { ValidIndicator } from '@/components/ValidIndicator'
+
 
 export default function SignupScreen() {
     const [email,setEmail] = useState <string>("")
-    const [validEmail,setValidEmail] = useState<boolean|null>(null)
+    const [validEmail,setValidEmail] = useState<ValidationState>(ValidationState.NONE)
+    const [password,setPassword] = useState<string>("")
+    const [validPassword,setValidPassword] = useState<ValidationState>(ValidationState.NONE)
+
     useEffect( () => {
-        if( email.indexOf('@') > 0 ) {
-            setValidEmail(true)
+        if( email.length > 0 
+            && email.indexOf('@') > 0 
+            && (email.split('.').length - 1) > 0
+            && email.indexOf(' ') === -1
+        ) 
+        {
+            setValidEmail(ValidationState.VALID)
         }
-        else {
-            setValidEmail(false)
+        // else if( email.length == 0 ) {
+        //     setValidEmail(ValidationState.NONE)
+        // }
+        else if( email.length > 0 
+            && email.indexOf('@') < 0 
+            && email.indexOf(' ') != 0
+        ) {
+            setValidEmail(ValidationState.INVALID)
         }
+        console.log( email.indexOf(' ') )
     }, [email])
+
+    useEffect( () => { 
+        if( password.length > 0 && password.length >= 8 ) {
+            setValidPassword(ValidationState.VALID)
+        }
+        else if( password.length > 0 ){
+            setValidPassword(ValidationState.INVALID)
+        }
+    }, [password])
+
     return (
         <View style={ styles.container }>
             <View style={ styles.form }>
             <Text style={ styles.heading }>Sign up for an account</Text>
-            <Text>Email</Text>
+            <View style={{flexDirection: "row"}}>
+                <Text style={styles.label}>Email</Text>
+                <ValidIndicator state={validEmail} />
+            </View>
             <TextInput 
                 style={ 
-                    (validEmail == null ) ? styles.input : 
-                    (validEmail == true ) ? styles.validInput : styles.invalidInput } 
+                    (validEmail === -1 ) ? styles.input : 
+                    (validEmail == 1 ) ? styles.validInput : styles.invalidInput } 
                 value={email}
-                onChangeText={ (value:string) => setEmail(value) }
+                onChangeText={ (value:string) => {
+                    setEmail(value)
+                } }
+                placeholder='you@example.com'
             />
-            <Text>Password</Text>
+             <View style={{flexDirection: "row"}}>
+                <Text style={styles.label}>Password</Text>
+                <ValidIndicator state={validPassword} />
+            </View>
             <TextInput 
-                style={ styles.input }
+                style={ (validPassword === -1 ) ? styles.input : (validPassword === 1 ) ? styles.validInput : styles.invalidInput }
                 secureTextEntry={true}
+                onChangeText={ (value:string) => setPassword(value) }
+                placeholder='minimum 8 characters'
             />
-            <Pressable style={ styles.button }>
-                <Text style={ styles.buttonText }>Signup</Text>
+            <Pressable style={ ( validEmail === 1 && validPassword === 1 ) ? styles.button : styles.buttonDisabled }>
+                <Text style={ ( validEmail === 1 && validPassword === 1 ) ? styles.buttonText : styles.buttonTextDisabled  }>Signup</Text>
             </Pressable>
             </View>
         </View>
@@ -51,6 +90,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 700,
         marginBottom: 20,
+    },
+    label: {
+        flex: 1,
+        marginVertical: 5,
     },
     input: {
         padding: 5,
@@ -80,6 +123,14 @@ const styles = StyleSheet.create({
     buttonText: {
         color: "#CCCCCC",
         textAlign: "center",
+    },
+    buttonDisabled: {
+        backgroundColor: "#CCCCCC",
+        marginVertical: 15,
+        padding: 5,
+    },
+    buttonTextDisabled: {
+        color: "#6c6c6c",
+        textAlign: "center",
     }
-
 })

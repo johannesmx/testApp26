@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { Button } from "@/components/Button";
 import { Link } from "expo-router";
+import { Mood } from "@/components/Mood";
 import { useColorTheme } from "@/hooks/useColorTheme";
 
 export default function HomeScreen() {
@@ -18,10 +19,9 @@ export default function HomeScreen() {
       <Text style={[ styles.heading, {color: theme.text}]}>App screen 1</Text>
       <Text>Hello world</Text>
       <Button text="Click Me" background="green" />
-      <Button text="Don't click me" background="red"  />
-      <Button text="I told you not to click" background="brown" />
-      <Link href="/test">
-        <Text>go to another screen</Text>
+      <Mood />
+      <Link href="/signup">
+        <Text>go to signup</Text>
       </Link>
     </View>
   );

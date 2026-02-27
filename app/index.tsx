@@ -2,12 +2,17 @@ import {View,StyleSheet,Text,TextInput,Pressable} from 'react-native'
 import {useState,useEffect} from 'react'
 import { Link } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
+import { useThemeColors } from '@/hooks/useThemeColors'
+import { ThemedText } from '@/components/ThemedText'
 
 export default function SignupScreen() {
     const [email,setEmail] = useState <string>("")
     const [validEmail,setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password,setPassword] = useState<string>("")
     const [validPassword,setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
+    
+    const theme = useThemeColors()
+
     useEffect( () => {
         if( email.indexOf('@') > 0 ) {
             setValidEmail(ValidationStates.VALID)
@@ -27,10 +32,12 @@ export default function SignupScreen() {
     }, [password])
 
     return (
-        <View style={ styles.container }>
-            <View style={ styles.form }>
-            <Text style={ styles.heading }>Sign up for an account</Text>
-            <Text>Email</Text>
+        <View style={ [styles.container, {backgroundColor:theme.background}] }>
+            <View style={ [styles.form, {backgroundColor:theme.background}] }>
+            <ThemedText style={ styles.heading }>
+                Sign up for an account
+            </ThemedText>
+            <ThemedText>Email</ThemedText>
             <TextInput 
                 style={ 
                     (validEmail === ValidationStates.NONE ) ? styles.input : 
@@ -39,7 +46,7 @@ export default function SignupScreen() {
                 onChangeText={ (value:string) => setEmail(value) }
                 placeholder="user@example.com"
             />
-            <Text>Password</Text>
+             <ThemedText>Password</ThemedText>
             <TextInput 
                 style={ 
                     (validPassword === ValidationStates.NONE ) ? styles.input : 
@@ -64,7 +71,7 @@ export default function SignupScreen() {
                 </Text>
             </Pressable>
             <Link href="/login">
-                Have an account? Go to Login
+                <ThemedText>Have an account? Go to Login</ThemedText>
             </Link>
             </View>
         </View>

@@ -4,6 +4,8 @@ import { Link } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
 import { useThemeColors } from '@/hooks/useThemeColors'
 import { ThemedText } from '@/components/ThemedText'
+import { ThemedInput } from '@/components/ThemedInput'
+import { ThemedButton } from '@/components/ThemedButton'
 
 export default function SignupScreen() {
     const [email,setEmail] = useState <string>("")
@@ -38,7 +40,7 @@ export default function SignupScreen() {
                 Sign up for an account
             </ThemedText>
             <ThemedText>Email</ThemedText>
-            <TextInput 
+            <ThemedInput 
                 style={ 
                     (validEmail === ValidationStates.NONE ) ? styles.input : 
                     (validEmail == ValidationStates.VALID ) ? styles.validInput : styles.invalidInput } 
@@ -47,7 +49,7 @@ export default function SignupScreen() {
                 placeholder="user@example.com"
             />
              <ThemedText>Password</ThemedText>
-            <TextInput 
+            <ThemedInput 
                 style={ 
                     (validPassword === ValidationStates.NONE ) ? styles.input : 
                     (validPassword == ValidationStates.VALID ) ? styles.validInput : styles.invalidInput } 
@@ -73,6 +75,7 @@ export default function SignupScreen() {
             <Link href="/login">
                 <ThemedText>Have an account? Go to Login</ThemedText>
             </Link>
+            <ThemedButton text="Hey" style={styles.button} disabled={false} handler={ () => console.log("clicked")}/>
             </View>
         </View>
     )
@@ -95,9 +98,10 @@ const styles = StyleSheet.create({
     },
     input: {
         padding: 5,
-        borderColor: "#CCCCCC",
+        // borderColor: "#CCCCCC",
         borderWidth: 2,
         marginBottom: 15,
+        borderRadius: 4
     },
     validInput: {
         padding: 5,
@@ -114,14 +118,15 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffb8b8",
     },
     button: {
-        backgroundColor: "#333333",
         marginVertical: 15,
         padding: 5,
     },
     buttonText: {
-        color: "#CCCCCC",
         textAlign: "center",
     },
+    buttonEnabled: {
+    },
+    buttonTextEnabled: {},
     buttonDisabled: {
         backgroundColor: "#CCCCCC",
         marginVertical: 15,

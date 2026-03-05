@@ -6,8 +6,11 @@ export function ThemedInput ( props:TextInputProps) {
 
     return (
         <TextInput {...props} 
-        style={[ props.style, 
-            {backgroundColor: theme.background, color: theme.text, borderColor: theme.border }]}
+            style={[ props.style, 
+                {backgroundColor: theme.background, 
+                color: theme.text, 
+                borderColor: theme.border 
+            }]}
         />
     )
 }

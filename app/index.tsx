@@ -6,6 +6,8 @@ import { useThemeColors } from '@/hooks/useThemeColors'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { FormTextInput } from '@/components/FormTextInput'
+import { TextInputType } from '@/interfaces/FormTextInputTypes'
 
 export default function SignupScreen() {
     const [email,setEmail] = useState <string>("")
@@ -76,6 +78,7 @@ export default function SignupScreen() {
                 <ThemedText>Have an account? Go to Login</ThemedText>
             </Link>
             <ThemedButton text="Hey" style={styles.button} disabled={false} handler={ () => console.log("clicked")}/>
+            <FormTextInput text="Test" type={TextInputType.EMAIL} secure={true}/>
             </View>
         </View>
     )

@@ -73,30 +73,16 @@ export default function SignupScreen() {
                 onChangeText={ (value:string) => setPassword(value) }
                 placeholder="Minimum 8 characters"
             />
-            <Pressable 
-                style={ (validEmail == ValidationStates.VALID 
-                    && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled }
-                disabled={ 
-                (validEmail == ValidationStates.VALID 
-                    && validPassword == ValidationStates.VALID) ? false : true
-                }
-            >
-                <Text 
-                    style={ (validEmail == ValidationStates.VALID 
-                    && validPassword == ValidationStates.VALID) ? 
-                    styles.buttonText : styles.buttonTextDisabled }>
-                        Signup
-                </Text>
-            </Pressable>
-            <Link href="/login">
-                <ThemedText>Have an account? Go to Login</ThemedText>
-            </Link>
             <ThemedButton 
                 text="Hey" 
                 disabled={ (validForm) ? false: true } 
                 handler={ () => signUp(email,password) }
                 valid={ validForm }
             />
+            <Link href="/login">
+                <ThemedText>Have an account? Go to Login</ThemedText>
+            </Link>
+            
             </View>
         </View>
     )

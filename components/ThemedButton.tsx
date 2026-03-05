@@ -1,7 +1,6 @@
 
 import { PressableProps, type ViewStyle, Pressable,Text, GestureResponderEvent, StyleSheet } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { GestureResponderEvent, Pressable, type ViewStyle } from "react-native";
 import { ThemedText } from "./ThemedText";
 import { ValidationStates } from "@/interfaces/ValidationStates";
 

@@ -14,7 +14,7 @@ export default function SignupScreen() {
     const [validEmail,setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password,setPassword] = useState<string>("")
     const [validPassword,setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
-    
+    const [validForm, setValidForm ] = useState<ValidationStates>(ValidationStates.INVALID)
     const theme = useThemeColors()
 
     useEffect( () => {
@@ -34,6 +34,20 @@ export default function SignupScreen() {
             setValidPassword(ValidationStates.INVALID)
         }
     }, [password])
+
+    useEffect( () => {
+        if( validEmail == ValidationStates.VALID && validPassword == ValidationStates.VALID) {
+            setValidForm( ValidationStates.VALID)
+        }
+        else {
+            setValidForm( ValidationStates.INVALID )
+        }
+    })
+
+    const signUp = (email:string, password:string ) => {
+        // sign up procedure here
+        console.log(`signing up with ${email} ...`)
+    }
 
     return (
         <View style={ [styles.container, {backgroundColor:theme.background}] }>
@@ -77,8 +91,12 @@ export default function SignupScreen() {
             <Link href="/login">
                 <ThemedText>Have an account? Go to Login</ThemedText>
             </Link>
-            <ThemedButton text="Hey" style={styles.button} disabled={false} handler={ () => console.log("clicked")}/>
-            <FormTextInput text="Test" type={TextInputType.EMAIL} secure={true}/>
+            <ThemedButton 
+                text="Hey" 
+                disabled={ (validForm) ? false: true } 
+                handler={ () => signUp(email,password) }
+                valid={ validForm }
+            />
             </View>
         </View>
     )

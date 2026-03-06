@@ -6,12 +6,14 @@ import { useThemeColors } from '@/hooks/useThemeColors'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
+import { ThemedButton } from '@/components/ThemedButton'
 
 export default function SignupScreen() {
     const [email, setEmail] = useState<string>("")
     const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password, setPassword] = useState<string>("")
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
+    const [validForm,setValidForm] = useState<boolean>(false)
 
     const theme = useThemeColors()
 
@@ -32,6 +34,15 @@ export default function SignupScreen() {
             setValidPassword(ValidationStates.INVALID)
         }
     }, [password])
+
+    useEffect( () => {
+        if( validEmail == ValidationStates.VALID && validPassword == ValidationStates.VALID ) {
+            setValidForm(true)
+        }
+        else {
+            setValidForm(false)
+        }
+    }, [email,password])
 
     return (
         <ThemedView style={styles.container}>
@@ -72,6 +83,12 @@ export default function SignupScreen() {
                         Signup
                     </Text>
                 </Pressable>
+                <ThemedButton 
+                    text="Sign up" 
+                    valid={validForm} 
+                    handler={ () => console.log("sign up...") } 
+                    disabled={ (validForm) ? false : true }
+                    />
                 <Link href="/login">
                     <ThemedText>Have an account? Go to Login</ThemedText>
                 </Link>

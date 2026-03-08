@@ -1,90 +1,101 @@
-import {View,StyleSheet,Text,TextInput,Pressable} from 'react-native'
-import {useState,useEffect} from 'react'
+import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native'
+import { useState, useEffect } from 'react'
 import { Link } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
 import { useThemeColors } from '@/hooks/useThemeColors'
 import { ThemedText } from '@/components/ThemedText'
+import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
-import { FormTextInput } from '@/components/FormTextInput'
-import { TextInputType } from '@/interfaces/FormTextInputTypes'
 
 export default function SignupScreen() {
-    const [email,setEmail] = useState <string>("")
-    const [validEmail,setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
-    const [password,setPassword] = useState<string>("")
-    const [validPassword,setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
-    const [validForm, setValidForm ] = useState<ValidationStates>(ValidationStates.INVALID)
+    const [email, setEmail] = useState<string>("")
+    const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
+    const [password, setPassword] = useState<string>("")
+    const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
+    const [validForm,setValidForm] = useState<boolean>(false)
+
     const theme = useThemeColors()
 
-    useEffect( () => {
-        if( email.indexOf('@') > 0 ) {
+    useEffect(() => {
+        if (email.indexOf('@') > 0) {
             setValidEmail(ValidationStates.VALID)
         }
-        else if(email.length > 0 ) {
+        else if (email.length > 0) {
             setValidEmail(ValidationStates.INVALID)
         }
     }, [email])
 
-    useEffect( () => {
-        if( password.length >= 8 ) {
+    useEffect(() => {
+        if (password.length >= 8) {
             setValidPassword(ValidationStates.VALID)
         }
-        else if(password.length > 0) {
+        else if (password.length > 0) {
             setValidPassword(ValidationStates.INVALID)
         }
     }, [password])
 
     useEffect( () => {
-        if( validEmail == ValidationStates.VALID && validPassword == ValidationStates.VALID) {
-            setValidForm( ValidationStates.VALID)
+        if( validEmail == ValidationStates.VALID && validPassword == ValidationStates.VALID ) {
+            setValidForm(true)
         }
         else {
-            setValidForm( ValidationStates.INVALID )
+            setValidForm(false)
         }
-    })
-
-    const signUp = (email:string, password:string ) => {
-        // sign up procedure here
-        console.log(`signing up with ${email} ...`)
-    }
+    }, [email,password])
 
     return (
-        <View style={ [styles.container, {backgroundColor:theme.background}] }>
-            <View style={ [styles.form, {backgroundColor:theme.background}] }>
-            <ThemedText style={ styles.heading }>
-                Sign up for an account
-            </ThemedText>
-            <ThemedText>Email</ThemedText>
-            <ThemedInput 
-                style={ 
-                    (validEmail === ValidationStates.NONE ) ? styles.input : 
-                    (validEmail == ValidationStates.VALID ) ? styles.validInput : styles.invalidInput } 
-                value={email}
-                onChangeText={ (value:string) => setEmail(value) }
-                placeholder="user@example.com"
-            />
-             <ThemedText>Password</ThemedText>
-            <ThemedInput 
-                style={ 
-                    (validPassword === ValidationStates.NONE ) ? styles.input : 
-                    (validPassword == ValidationStates.VALID ) ? styles.validInput : styles.invalidInput } 
-                secureTextEntry={true}
-                onChangeText={ (value:string) => setPassword(value) }
-                placeholder="Minimum 8 characters"
-            />
-            <ThemedButton 
-                text="Hey" 
-                disabled={ (validForm) ? false: true } 
-                handler={ () => signUp(email,password) }
-                valid={ validForm }
-            />
-            <Link href="/login">
-                <ThemedText>Have an account? Go to Login</ThemedText>
-            </Link>
-            
+        <ThemedView style={styles.container}>
+            <View style={[styles.form, { backgroundColor: theme.background }]}>
+                <ThemedText style={styles.heading}>
+                    Sign up for an account
+                </ThemedText>
+                <ThemedText>Email</ThemedText>
+                <ThemedInput
+                    style={
+                        (validEmail === ValidationStates.NONE) ? styles.input :
+                            (validEmail == ValidationStates.VALID) ? styles.validInput : styles.invalidInput}
+                    value={email}
+                    onChangeText={(value: string) => setEmail(value)}
+                    placeholder="user@example.com"
+                />
+                <ThemedText>Password</ThemedText>
+                <ThemedInput 
+                    style={
+                        (validPassword === ValidationStates.NONE) ? styles.input :
+                            (validPassword == ValidationStates.VALID) ? styles.validInput : styles.invalidInput}
+                    secureTextEntry={true}
+                    onChangeText={(value: string) => setPassword(value)}
+                    placeholder="Minimum 8 characters"
+                />
+                <Pressable
+                    style={(validEmail == ValidationStates.VALID
+                        && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled}
+                    disabled={
+                        (validEmail == ValidationStates.VALID
+                            && validPassword == ValidationStates.VALID) ? false : true
+                    }
+                >
+                    <Text
+                        style={(validEmail == ValidationStates.VALID
+                            && validPassword == ValidationStates.VALID) ?
+                            styles.buttonText : styles.buttonTextDisabled}>
+                        Signup
+                    </Text>
+                </Pressable>
+                <ThemedButton 
+                    text="Sign up" 
+                    valid={validForm} 
+                    handler={ () => console.log("sign up...") } 
+                    disabled={ (validForm) ? false : true }
+                    />
+                <Link href="/login">
+                    <ThemedText>Have an account? Go to Login</ThemedText>
+                </Link>
+
             </View>
-        </View>
+        </ThemedView>
+
     )
 }
 
@@ -93,7 +104,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     form: {
-        marginHorizontal:10,
+        marginHorizontal: 10,
         marginVertical: 50,
         backgroundColor: "#FFFFFF",
         padding: 15,

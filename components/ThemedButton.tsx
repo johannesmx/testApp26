@@ -1,34 +1,25 @@
-
-import { PressableProps, type ViewStyle, Pressable,Text, GestureResponderEvent, StyleSheet } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { ThemedButtonProps } from "@/interfaces/ThemedButtonProps";
+import { Pressable, StyleSheet } from "react-native";
 import { ThemedText } from "./ThemedText";
-import { ValidationStates } from "@/interfaces/ValidationStates";
 
-interface ThemedButtonProps {
-
-}
-
-export function ThemedButton( props:{ 
-    text:string, 
-    disabled:boolean, 
-    handler:(event:GestureResponderEvent)=>void,
-    valid: ValidationStates}
-     ) {
+export function ThemedButton( props:ThemedButtonProps) {
     const theme = useThemeColors()
-    console.log( theme.border )
-    return (
+    console.log(props.valid )
+    return(
         <Pressable 
-            {...props} 
-            onPress={ props.handler } 
-            style={ [styles.button, { 
-                borderWidth: 2,
-                borderStyle: "solid", 
+            {...props}
+            disabled={ props.disabled } 
+            onPress={ props.handler }
+            style={ [styles.button, {
                 borderColor: theme.border,
                 backgroundColor: theme.buttonbg,
-                opacity: (props.valid) ? 1 : 0.5 }] }
-            disabled={ props.disabled }
+                opacity: ( props.valid ) ? 1 : 0.5
+            }
+
+            ]}
         >
-            <ThemedText style={styles.text}>{props.text}</ThemedText>
+            <ThemedText style={ styles.text }>{ props.text }</ThemedText>
         </Pressable>
     )
 }
@@ -38,8 +29,10 @@ const styles = StyleSheet.create({
         marginVertical: 15,
         padding: 5,
         borderRadius: 4,
+        borderWidth: 2,
+        borderStyle: "solid",
     },
     text: {
-        textAlign: "center",
+        textAlign: "center"
     }
 })

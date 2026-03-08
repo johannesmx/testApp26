@@ -9,7 +9,8 @@ export function ThemedInput( props:TextInputProps ) {
         style={[ props.style, { 
             backgroundColor: theme.background, 
             borderColor: theme.border, 
-            color: theme.text }
+            color: theme.text,
+            placeholderTextColor: theme.placeholder }
          ]}
         />
     )

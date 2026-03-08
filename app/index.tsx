@@ -58,6 +58,7 @@ export default function SignupScreen() {
                     value={email}
                     onChangeText={(value: string) => setEmail(value)}
                     placeholder="user@example.com"
+                    valid = {validEmail}
                 />
                 <ThemedText>Password</ThemedText>
                 <ThemedInput 
@@ -67,6 +68,7 @@ export default function SignupScreen() {
                     secureTextEntry={true}
                     onChangeText={(value: string) => setPassword(value)}
                     placeholder="Minimum 8 characters"
+                    valid={validPassword}
                 />
                 <Pressable
                     style={(validEmail == ValidationStates.VALID

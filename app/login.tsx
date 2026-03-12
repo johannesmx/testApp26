@@ -22,7 +22,7 @@ export default function SigninScreen() {
     useEffect(() => {
         if (auth.isAuthenticated) {
             console.log(auth.user)
-            router.navigate('/home')
+            router.navigate('/home/home')
         }
     }, [
         auth.isAuthenticated

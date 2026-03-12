@@ -25,9 +25,7 @@ export default function RootLayout() {
       }} />
       <Stack.Screen name="home" options={{
         title: "Home",
-        headerShown: true,
-        headerStyle: { backgroundColor: theme.background },
-        headerTintColor: theme.text
+        headerShown: false,
       }} />
     </Stack>
   )

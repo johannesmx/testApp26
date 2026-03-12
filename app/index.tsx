@@ -13,7 +13,6 @@ export default function SignupScreen() {
     const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password, setPassword] = useState<string>("")
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
-    const [validForm,setValidForm] = useState<boolean>(false)
 
     const theme = useThemeColors()
 
@@ -35,14 +34,7 @@ export default function SignupScreen() {
         }
     }, [password])
 
-    useEffect( () => {
-        if( validEmail == ValidationStates.VALID && validPassword == ValidationStates.VALID ) {
-            setValidForm(true)
-        }
-        else {
-            setValidForm(false)
-        }
-    }, [email,password])
+    
 
     return (
         <ThemedView style={styles.container}>
@@ -70,21 +62,6 @@ export default function SignupScreen() {
                     placeholder="Minimum 8 characters"
                     valid={validPassword}
                 />
-                {/* <Pressable
-                    style={(validEmail == ValidationStates.VALID
-                        && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled}
-                    disabled={
-                        (validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ? false : true
-                    }
-                >
-                    <Text
-                        style={(validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ?
-                            styles.buttonText : styles.buttonTextDisabled}>
-                        Signup
-                    </Text>
-                </Pressable> */}
                 <ThemedButton 
                     text="Sign up" 
                     valid={ 

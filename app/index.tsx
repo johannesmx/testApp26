@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { useState, useEffect } from 'react'
 import { Link } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
@@ -7,6 +7,8 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+import { router } from 'expo-router'
 
 export default function SignupScreen() {
     const [email, setEmail] = useState<string>("")
@@ -15,6 +17,17 @@ export default function SignupScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
     
     const theme = useThemeColors()
+    const auth = useFirebaseAuth()
+    
+
+    useEffect( () => {
+        if(auth.isAuthenticated) {
+            console.log( auth.user )
+            router.navigate('/home')
+        }
+    },[
+        auth.isAuthenticated
+    ])
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -61,25 +74,13 @@ export default function SignupScreen() {
                     placeholder="Minimum 8 characters"
                     valid={validPassword}
                 />
-                <Pressable
-                    style={(validEmail == ValidationStates.VALID
-                        && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled}
-                    disabled={
-                        (validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ? false : true
-                    }
-                >
-                    <Text
-                        style={(validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ?
-                            styles.buttonText : styles.buttonTextDisabled}>
-                        Signup
-                    </Text>
-                </Pressable>
+                
                 <ThemedButton 
                     text="Sign up" 
                     valid={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? true : false } 
-                    handler={ () => console.log("sign up...") } 
+                    handler={ () => {
+                        auth.signUp( email, password )
+                    } } 
                     disabled={ (validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? false : true }
                     />
                 <Link href="/login">

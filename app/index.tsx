@@ -58,6 +58,7 @@ export default function SignupScreen() {
                     value={email}
                     onChangeText={(value: string) => setEmail(value)}
                     placeholder="user@example.com"
+                    valid={validEmail}
                 />
                 <ThemedText>Password</ThemedText>
                 <ThemedInput 
@@ -67,8 +68,9 @@ export default function SignupScreen() {
                     secureTextEntry={true}
                     onChangeText={(value: string) => setPassword(value)}
                     placeholder="Minimum 8 characters"
+                    valid={validPassword}
                 />
-                <Pressable
+                {/* <Pressable
                     style={(validEmail == ValidationStates.VALID
                         && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled}
                     disabled={
@@ -82,13 +84,16 @@ export default function SignupScreen() {
                             styles.buttonText : styles.buttonTextDisabled}>
                         Signup
                     </Text>
-                </Pressable>
+                </Pressable> */}
                 <ThemedButton 
                     text="Sign up" 
-                    valid={validForm} 
+                    valid={ 
+                        (validEmail === ValidationStates.VALID 
+                            && validPassword === ValidationStates.VALID) ? true : false } 
                     handler={ () => console.log("sign up...") } 
-                    disabled={ (validForm) ? false : true }
-                    />
+                    disabled={ (validEmail === ValidationStates.VALID 
+                        && validPassword === ValidationStates.VALID) ? false : true }
+                />
                 <Link href="/login">
                     <ThemedText>Have an account? Go to Login</ThemedText>
                 </Link>

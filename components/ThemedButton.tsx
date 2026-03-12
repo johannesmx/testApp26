@@ -1,11 +1,16 @@
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { ThemedButtonProps } from "@/interfaces/ThemedButtonProps";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet,  } from "react-native";
+import { useState, useEffect} from 'react'
 import { ThemedText } from "./ThemedText";
 
 export function ThemedButton( props:ThemedButtonProps) {
     const theme = useThemeColors()
-    console.log(props.valid )
+
+    useEffect( () => {
+        console.log("valid "+ props.valid)
+    }, [props.valid])
+
     return(
         <Pressable 
             {...props}

@@ -13,8 +13,7 @@ export default function SignupScreen() {
     const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password, setPassword] = useState<string>("")
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
-    const [validForm,setValidForm] = useState<boolean>(false)
-
+    
     const theme = useThemeColors()
 
     useEffect(() => {
@@ -35,14 +34,6 @@ export default function SignupScreen() {
         }
     }, [password])
 
-    useEffect( () => {
-        if( validEmail == ValidationStates.VALID && validPassword == ValidationStates.VALID ) {
-            setValidForm(true)
-        }
-        else {
-            setValidForm(false)
-        }
-    }, [email,password])
 
     return (
         <ThemedView style={styles.container}>
@@ -87,9 +78,9 @@ export default function SignupScreen() {
                 </Pressable>
                 <ThemedButton 
                     text="Sign up" 
-                    valid={validForm} 
+                    valid={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? true : false } 
                     handler={ () => console.log("sign up...") } 
-                    disabled={ (validForm) ? false : true }
+                    disabled={ (validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? false : true }
                     />
                 <Link href="/login">
                     <ThemedText>Have an account? Go to Login</ThemedText>

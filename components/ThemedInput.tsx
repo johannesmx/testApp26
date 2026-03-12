@@ -9,7 +9,6 @@ interface ThemedInputProps extends TextInputProps {
 export function ThemedInput(props: ThemedInputProps) {
     const theme = useThemeColors()
     // component styles for the TextInput
-    console.log(props.valid)
     const TextInputStyles = {
         backgroundColor: (props.valid === ValidationStates.NONE ) ? theme.background : (props.valid === ValidationStates.INVALID) ? theme.invalid : theme.valid ,
         borderColor: theme.border,

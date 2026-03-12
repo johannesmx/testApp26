@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react'
 import { Link } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
 import { useThemeColors } from '@/hooks/useThemeColors'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { router } from 'expo-router'
 
 export default function SigninScreen() {
     const [email, setEmail] = useState<string>("")
@@ -15,6 +17,16 @@ export default function SigninScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
 
     const theme = useThemeColors()
+    const auth = useFirebaseAuth()
+
+    useEffect(() => {
+        if (auth.isAuthenticated) {
+            console.log(auth.user)
+            router.navigate('/home')
+        }
+    }, [
+        auth.isAuthenticated
+    ])
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -60,12 +72,12 @@ export default function SigninScreen() {
                     placeholder="Minimum 8 characters"
                     valid={validPassword}
                 />
-                <ThemedButton 
-                    text="Login" 
-                    valid={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? true : false } 
-                    handler={ () => console.log("sign up...") } 
-                    disabled={ (validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? false : true }
-                    />
+                <ThemedButton
+                    text="Login"
+                    valid={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? true : false}
+                    handler={() => auth.signIn(email, password)}
+                    disabled={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? false : true}
+                />
                 <Link href="/" replace >
                     <ThemedText>Don't have an account? Go to Signup</ThemedText>
                 </Link>

@@ -5,8 +5,8 @@ export const AppTheme = {
         buttonbg: "#001242",
         border: "#b6b5b5",
         valid: "#34a101",
-        invalid: "#aa3b1a"
-
+        invalid: "#aa3b1a",
+        placeholder: "#cccccc"
     },
     light: {
         text: "#040F16",
@@ -14,6 +14,7 @@ export const AppTheme = {
         buttonbg: "#70DBFF",
         border: "#484747",
         valid: "#baf0a1",
-        invalid: "#d18670"
+        invalid: "#d18670",
+        placeholder: "#999999"
     }
 }

@@ -1,73 +1,76 @@
-import {View,StyleSheet,Text,TextInput,Pressable} from 'react-native'
-import {useState,useEffect} from 'react'
+import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native'
+import { useState, useEffect } from 'react'
 import { Link } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
+import { useThemeColors } from '@/hooks/useThemeColors'
+import { ThemedText } from '@/components/ThemedText'
+import { ThemedView } from '@/components/ThemedView'
+import { ThemedInput } from '@/components/ThemedInput'
+import { ThemedButton } from '@/components/ThemedButton'
 
-export default function SignupScreen() {
-    const [email,setEmail] = useState <string>("")
-    const [validEmail,setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
-    const [password,setPassword] = useState<string>("")
-    const [validPassword,setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
-    useEffect( () => {
-        if( email.indexOf('@') > 0 ) {
+export default function LoginScreen() {
+    const [email, setEmail] = useState<string>("")
+    const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
+    const [password, setPassword] = useState<string>("")
+    const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
+
+    const theme = useThemeColors()
+    useEffect(() => {
+        if (email.indexOf('@') > 0) {
             setValidEmail(ValidationStates.VALID)
         }
-        else if(email.length > 0 ) {
+        else if (email.length > 0) {
             setValidEmail(ValidationStates.INVALID)
         }
     }, [email])
 
-    useEffect( () => {
-        if( password.length >= 8 ) {
+    useEffect(() => {
+        if (password.length >= 8) {
             setValidPassword(ValidationStates.VALID)
         }
-        else if(password.length > 0) {
+        else if (password.length > 0) {
             setValidPassword(ValidationStates.INVALID)
         }
     }, [password])
 
     return (
-        <View style={ styles.container }>
-            <View style={ styles.form }>
-            <Text style={ styles.heading }>Sign up for an account</Text>
-            <Text>Email</Text>
-            <TextInput 
-                style={ 
-                    (validEmail === ValidationStates.NONE ) ? styles.input : 
-                    (validEmail == ValidationStates.VALID ) ? styles.validInput : styles.invalidInput } 
-                value={email}
-                onChangeText={ (value:string) => setEmail(value) }
-                placeholder="user@example.com"
-            />
-            <Text>Password</Text>
-            <TextInput 
-                style={ 
-                    (validPassword === ValidationStates.NONE ) ? styles.input : 
-                    (validPassword == ValidationStates.VALID ) ? styles.validInput : styles.invalidInput } 
-                secureTextEntry={true}
-                onChangeText={ (value:string) => setPassword(value) }
-                placeholder="Minimum 8 characters"
-            />
-            <Pressable 
-                style={ (validEmail == ValidationStates.VALID 
-                    && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled }
-                disabled={ 
-                (validEmail == ValidationStates.VALID 
-                    && validPassword == ValidationStates.VALID) ? false : true
-                }
-            >
-                <Text 
-                    style={ (validEmail == ValidationStates.VALID 
-                    && validPassword == ValidationStates.VALID) ? 
-                    styles.buttonText : styles.buttonTextDisabled }>
-                        Signup
-                </Text>
-            </Pressable>
-            <Link href="/">
-                Don't have an account? Go to Signup
-            </Link>
+        <ThemedView style={styles.container}>
+            <View style={[styles.form, { backgroundColor: theme.background }]}>
+                <ThemedText style={styles.heading}>Sign in to your account</ThemedText>
+                <ThemedText>Email</ThemedText>
+                <ThemedInput
+                    style={
+                        (validEmail === ValidationStates.NONE) ? styles.input :
+                            (validEmail == ValidationStates.VALID) ? styles.validInput : styles.invalidInput}
+                    value={email}
+                    onChangeText={(value: string) => setEmail(value)}
+                    placeholder="user@example.com"
+                    valid={validEmail}
+                />
+                <ThemedText>Password</ThemedText>
+                <ThemedInput 
+                    style={
+                        (validPassword === ValidationStates.NONE) ? styles.input :
+                            (validPassword == ValidationStates.VALID) ? styles.validInput : styles.invalidInput}
+                    secureTextEntry={true}
+                    onChangeText={(value: string) => setPassword(value)}
+                    placeholder="Minimum 8 characters"
+                    valid={validPassword}
+                />
+                <ThemedButton 
+                    text="Sign in" 
+                    valid={ 
+                        (validEmail === ValidationStates.VALID 
+                            && validPassword === ValidationStates.VALID) ? true : false } 
+                    handler={ () => console.log("sign up...") } 
+                    disabled={ (validEmail === ValidationStates.VALID 
+                        && validPassword === ValidationStates.VALID) ? false : true }
+                />
+                <Link href="/">
+                    <ThemedText>Don't have an account? Go to Signup</ThemedText>
+                </Link>
             </View>
-        </View>
+        </ThemedView>
     )
 }
 
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     form: {
-        marginHorizontal:10,
+        marginHorizontal: 10,
         marginVertical: 50,
         backgroundColor: "#FFFFFF",
         padding: 15,

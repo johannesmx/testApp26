@@ -5,7 +5,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 
 export function ThemedButton( props:ThemedButtonProps) {
     const theme = useThemeColors()
-    console.log(props.valid )
+    
     return(
         <Pressable 
             {...props}

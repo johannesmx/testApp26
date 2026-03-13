@@ -17,7 +17,7 @@ export default function RootLayout() {
     <Stack.Screen 
       name="login" 
       options={{
-        title: "Sign up", 
+        title: "Sign in", 
         headerShown: true, 
         headerStyle: {backgroundColor: theme.background},
         headerTintColor: theme.text 

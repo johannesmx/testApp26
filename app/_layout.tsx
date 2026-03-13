@@ -23,6 +23,12 @@ export default function RootLayout() {
         headerTintColor: theme.text 
       }}
     />
+    <Stack.Screen
+      name="main"
+      options={{
+        headerShown: false
+      }}
+    />
   </Stack>
   )
 }

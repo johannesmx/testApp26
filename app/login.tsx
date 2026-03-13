@@ -7,6 +7,8 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+import { router } from 'expo-router'
 
 export default function LoginScreen() {
     const [email, setEmail] = useState<string>("")
@@ -15,6 +17,8 @@ export default function LoginScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
 
     const theme = useThemeColors()
+    const auth = useFirebaseAuth()
+
     useEffect(() => {
         if (email.indexOf('@') > 0) {
             setValidEmail(ValidationStates.VALID)
@@ -62,7 +66,14 @@ export default function LoginScreen() {
                     valid={ 
                         (validEmail === ValidationStates.VALID 
                             && validPassword === ValidationStates.VALID) ? true : false } 
-                    handler={ () => console.log("sign up...") } 
+                    handler={ () => { 
+                        auth.signIn(email,password)
+                        .then((response) => {
+                            console.log(response)
+                            
+                        } )
+                        
+                    } } 
                     disabled={ (validEmail === ValidationStates.VALID 
                         && validPassword === ValidationStates.VALID) ? false : true }
                 />

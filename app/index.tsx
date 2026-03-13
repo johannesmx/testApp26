@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 
 export default function SignupScreen() {
     const [email, setEmail] = useState<string>("")
@@ -15,6 +16,7 @@ export default function SignupScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
 
     const theme = useThemeColors()
+    const auth = useFirebaseAuth()
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -67,7 +69,7 @@ export default function SignupScreen() {
                     valid={ 
                         (validEmail === ValidationStates.VALID 
                             && validPassword === ValidationStates.VALID) ? true : false } 
-                    handler={ () => console.log("sign up...") } 
+                    handler={ () => {auth.signUp(email,password) } } 
                     disabled={ (validEmail === ValidationStates.VALID 
                         && validPassword === ValidationStates.VALID) ? false : true }
                 />

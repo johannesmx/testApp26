@@ -7,6 +7,8 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+import { router } from 'expo-router'
 
 export default function LoginScreen() {
     const [email, setEmail] = useState<string>("")
@@ -15,6 +17,7 @@ export default function LoginScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
 
     const theme = useThemeColors()
+    const auth = useFirebaseAuth()
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -37,7 +40,7 @@ export default function LoginScreen() {
     return (
         <ThemedView style={styles.container}>
             <View style={[styles.form, { backgroundColor: theme.background }]}>
-                <ThemedText style={styles.heading}>Sign up for an account</ThemedText>
+                <ThemedText style={styles.heading}>Sign in to your account</ThemedText>
                 <ThemedText>Email</ThemedText>
                 <ThemedInput
                     style={
@@ -46,31 +49,34 @@ export default function LoginScreen() {
                     value={email}
                     onChangeText={(value: string) => setEmail(value)}
                     placeholder="user@example.com"
+                    valid={validEmail}
                 />
                 <ThemedText>Password</ThemedText>
-                <ThemedInput
+                <ThemedInput 
                     style={
                         (validPassword === ValidationStates.NONE) ? styles.input :
                             (validPassword == ValidationStates.VALID) ? styles.validInput : styles.invalidInput}
                     secureTextEntry={true}
                     onChangeText={(value: string) => setPassword(value)}
                     placeholder="Minimum 8 characters"
+                    valid={validPassword}
                 />
-                <Pressable
-                    style={(validEmail == ValidationStates.VALID
-                        && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled}
-                    disabled={
-                        (validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ? false : true
-                    }
-                >
-                    <ThemedText
-                        style={(validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ?
-                            styles.buttonText : styles.buttonTextDisabled}>
-                        Signup
-                    </ThemedText>
-                </Pressable>
+                <ThemedButton 
+                    text="Sign in" 
+                    valid={ 
+                        (validEmail === ValidationStates.VALID 
+                            && validPassword === ValidationStates.VALID) ? true : false } 
+                    handler={ () => { 
+                        auth.signIn(email,password)
+                        .then((response) => {
+                            console.log(response)
+                            
+                        } )
+                        
+                    } } 
+                    disabled={ (validEmail === ValidationStates.VALID 
+                        && validPassword === ValidationStates.VALID) ? false : true }
+                />
                 <Link href="/">
                     <ThemedText>Don't have an account? Go to Signup</ThemedText>
                 </Link>

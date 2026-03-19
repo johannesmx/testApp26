@@ -7,15 +7,16 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 
 export default function SignupScreen() {
     const [email, setEmail] = useState<string>("")
     const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password, setPassword] = useState<string>("")
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
-    const [validForm,setValidForm] = useState<boolean>(false)
 
     const theme = useThemeColors()
+    const auth = useFirebaseAuth()
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -35,14 +36,7 @@ export default function SignupScreen() {
         }
     }, [password])
 
-    useEffect( () => {
-        if( validEmail == ValidationStates.VALID && validPassword == ValidationStates.VALID ) {
-            setValidForm(true)
-        }
-        else {
-            setValidForm(false)
-        }
-    }, [email,password])
+    
 
     return (
         <ThemedView style={styles.container}>
@@ -58,6 +52,7 @@ export default function SignupScreen() {
                     value={email}
                     onChangeText={(value: string) => setEmail(value)}
                     placeholder="user@example.com"
+                    valid={validEmail}
                 />
                 <ThemedText>Password</ThemedText>
                 <ThemedInput 
@@ -67,28 +62,17 @@ export default function SignupScreen() {
                     secureTextEntry={true}
                     onChangeText={(value: string) => setPassword(value)}
                     placeholder="Minimum 8 characters"
+                    valid={validPassword}
                 />
-                <Pressable
-                    style={(validEmail == ValidationStates.VALID
-                        && validPassword == ValidationStates.VALID) ? styles.button : styles.buttonDisabled}
-                    disabled={
-                        (validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ? false : true
-                    }
-                >
-                    <Text
-                        style={(validEmail == ValidationStates.VALID
-                            && validPassword == ValidationStates.VALID) ?
-                            styles.buttonText : styles.buttonTextDisabled}>
-                        Signup
-                    </Text>
-                </Pressable>
                 <ThemedButton 
                     text="Sign up" 
-                    valid={validForm} 
-                    handler={ () => console.log("sign up...") } 
-                    disabled={ (validForm) ? false : true }
-                    />
+                    valid={ 
+                        (validEmail === ValidationStates.VALID 
+                            && validPassword === ValidationStates.VALID) ? true : false } 
+                    handler={ () => {auth.signUp(email,password) } } 
+                    disabled={ (validEmail === ValidationStates.VALID 
+                        && validPassword === ValidationStates.VALID) ? false : true }
+                />
                 <Link href="/login">
                     <ThemedText>Have an account? Go to Login</ThemedText>
                 </Link>

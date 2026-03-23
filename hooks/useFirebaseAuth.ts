@@ -18,6 +18,16 @@ interface AuthState {
 export function useFirebaseAuth() {
     const [authState, setAuthState] = useState<AuthState>({ user: null, loading: true, error: null })
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setAuthState({ user, loading: false, error: null })
+        }, (error) => {
+            setAuthState({ user: null, loading: false, error: error.message })
+        })
+        return unsubscribe  // cleans up on unmount
+    }, [])
+
+
     // signing in with email and password
     const signIn = useCallback(
         async (email: string, password: string): Promise<User | null> => {
@@ -58,21 +68,21 @@ export function useFirebaseAuth() {
     )
 
     const signOut = useCallback(async (): Promise<void> => {
-        setAuthState((prev) => ({ ...prev, loading: true, error: null}))
+        setAuthState((prev) => ({ ...prev, loading: true, error: null }))
         try {
             await signOut()
-            setAuthState({ user:null, loading: false, error: null})
+            setAuthState({ user: null, loading: false, error: null })
         }
-        catch(error) {
-            const message = (error as Error ).message
-            setAuthState((prev) => ({...prev, loading: false, error: message }))
+        catch (error) {
+            const message = (error as Error).message
+            setAuthState((prev) => ({ ...prev, loading: false, error: message }))
         }
     },
         []
     )
     return {
         ...authState,
-        isAuthenticated: !! authState.user,
+        isAuthenticated: !!authState.user,
         signIn,
         signUp,
         signOut,

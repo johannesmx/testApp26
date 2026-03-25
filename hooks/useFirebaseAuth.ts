@@ -1,90 +1,139 @@
-import { useState, useEffect, useCallback } from "react"
-import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
-import { firebaseConfig } from "@/config/FirebaseConfig"
+// get Firebase app instance
+
+import { useState, useEffect } from "react";
 import {
-    getAuth, onAuthStateChanged, signInWithEmailAndPassword, Auth, User, UserCredential,
-    createUserWithEmailAndPassword, signOut
-} from 'firebase/auth'
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  sendPasswordResetEmail,
+  updateProfile,
+  User,
+  UserCredential,
+  AuthError,
+} from "firebase/auth";
+import { FirebaseApp, initializeApp, getApps } from "firebase/app";
+import { firebaseConfig } from "@/config/FirebaseConfig";
 
-const app: FirebaseApp = (getApps().length === 0) ? initializeApp(firebaseConfig) : getApps()[0]
-const auth: Auth = getAuth(app)
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-interface AuthState {
-    user: User | null
-    loading: boolean
-    error: string | null
+export interface AuthState {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
 }
 
-export function useFirebaseAuth() {
-    const [authState, setAuthState] = useState<AuthState>({ user: null, loading: true, error: null })
+export interface UseAuthReturn extends AuthState {
+  signIn: (email: string, password: string) => Promise<UserCredential>;
+  signUp: (email: string, password: string, displayName?: string) => Promise<UserCredential>;
+  signInWithGoogle: () => Promise<UserCredential>;
+  logOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  clearError: () => void;
+}
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setAuthState({ user, loading: false, error: null })
-        }, (error) => {
-            setAuthState({ user: null, loading: false, error: error.message })
-        })
-        return unsubscribe  // cleans up on unmount
-    }, [])
+// ─── Hook ─────────────────────────────────────────────────────────────────────
 
+export function useAuth(): UseAuthReturn {
+    const app: FirebaseApp = (getApps().length === 0) ? initializeApp(firebaseConfig) : getApps()[0]
+  const auth = getAuth(app);
 
-    // signing in with email and password
-    const signIn = useCallback(
-        async (email: string, password: string): Promise<User | null> => {
-            setAuthState((prev) => ({ ...prev, loading: true, error: null }))
-            try {
-                const { user }: UserCredential = await signInWithEmailAndPassword(
-                    auth, email, password
-                )
-                setAuthState({ user, loading: false, error: null })
-                return user
-            }
-            catch (error) {
-                const message = (error as Error).message
-                setAuthState((prev) => ({ ...prev, loading: false, error: message }))
-                return null
-            }
-        },
-        []
-    )
+  const [state, setState] = useState<AuthState>({
+    user: null,
+    loading: true, // true on mount — waiting for Firebase to restore session
+    error: null,
+  });
 
-    // signing up
-    const signUp = useCallback(
-        async (email: string, password: string): Promise<User | null> => {
-            try {
-                const { user }: UserCredential = await createUserWithEmailAndPassword(
-                    auth, email, password
-                )
-                setAuthState({ user, loading: false, error: null })
-                return user
-            }
-            catch (error) {
-                const message = (error as Error).message
-                setAuthState((prev) => ({ ...prev, loading: false, error: message }))
-                return null
-            }
-        },
-        []
-    )
+  // Listen for auth state changes (login, logout, token refresh)
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => setState({ user, loading: false, error: null }),
+      (error) => setState({ user: null, loading: false, error: error.message })
+    );
 
-    const signOut = useCallback(async (): Promise<void> => {
-        setAuthState((prev) => ({ ...prev, loading: true, error: null }))
-        try {
-            await signOut()
-            setAuthState({ user: null, loading: false, error: null })
-        }
-        catch (error) {
-            const message = (error as Error).message
-            setAuthState((prev) => ({ ...prev, loading: false, error: message }))
-        }
-    },
-        []
-    )
-    return {
-        ...authState,
-        isAuthenticated: !!authState.user,
-        signIn,
-        signUp,
-        signOut,
+    return unsubscribe; // clean up listener on unmount
+  }, [auth]);
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  const handleError = (err: unknown): never => {
+    const message = (err as AuthError).message ?? "An unknown error occurred.";
+    setState((prev) => ({ ...prev, error: message }));
+    throw err;
+  };
+
+  const clearError = () =>
+    setState((prev) => ({ ...prev, error: null }));
+
+  // ── Actions ────────────────────────────────────────────────────────────────
+
+  const signIn = async (email: string, password: string): Promise<UserCredential> => {
+    setState((prev) => ({ ...prev, loading: true, error: null }));
+    try {
+      const credential = await signInWithEmailAndPassword(auth, email, password);
+      return credential;
+    } catch (err) {
+      return handleError(err);
     }
+  };
+
+  const signUp = async (
+    email: string,
+    password: string,
+    displayName?: string
+  ): Promise<UserCredential> => {
+    setState((prev) => ({ ...prev, loading: true, error: null }));
+    try {
+      const credential = await createUserWithEmailAndPassword(auth, email, password);
+      if (displayName) {
+        await updateProfile(credential.user, { displayName });
+      }
+      return credential;
+    } catch (err) {
+      return handleError(err);
+    }
+  };
+
+  const signInWithGoogle = async (): Promise<UserCredential> => {
+    setState((prev) => ({ ...prev, loading: true, error: null }));
+    try {
+      const provider = new GoogleAuthProvider();
+      const credential = await signInWithPopup(auth, provider);
+      return credential;
+    } catch (err) {
+      return handleError(err);
+    }
+  };
+
+  const logOut = async (): Promise<void> => {
+    setState((prev) => ({ ...prev, loading: true, error: null }));
+    try {
+      await signOut(auth);
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  const resetPassword = async (email: string): Promise<void> => {
+    setState((prev) => ({ ...prev, error: null }));
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (err) {
+      handleError(err);
+    }
+  };
+
+  return {
+    ...state,
+    signIn,
+    signUp,
+    signInWithGoogle,
+    logOut,
+    resetPassword,
+    clearError,
+  };
 }

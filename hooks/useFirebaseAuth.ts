@@ -28,6 +28,16 @@ export function useFirebaseAuth() {
         return unsubscribe
     }, [])
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setAuthState({ user, loading: false, error: null })
+        }, (error) => {
+            setAuthState({ user: null, loading: false, error: error.message })
+        })
+        return unsubscribe  // cleans up on unmount
+    }, [])
+
+
     // signing in with email and password
     const signIn = useCallback(
         async (email: string, password: string): Promise<User | null> => {
@@ -74,9 +84,9 @@ export function useFirebaseAuth() {
             setAuthState({ user:null, loading: false, error: null})
           
         }
-        catch(error) {
-            const message = (error as Error ).message
-            setAuthState((prev) => ({...prev, loading: false, error: message }))
+        catch (error) {
+            const message = (error as Error).message
+            setAuthState((prev) => ({ ...prev, loading: false, error: message }))
         }
         console.log("authstate " + authState)
     },
@@ -84,7 +94,7 @@ export function useFirebaseAuth() {
     )
     return {
         ...authState,
-        isAuthenticated: !! authState.user,
+        isAuthenticated: !!authState.user,
         signIn,
         signUp,
         signOff,

@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react'
 import { Link } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
 import { useThemeColors } from '@/hooks/useThemeColors'
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
 import { router } from 'expo-router'
 
-export default function SigninScreen() {
+export default function LoginScreen() {
     const [email, setEmail] = useState<string>("")
     const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password, setPassword] = useState<string>("")
@@ -21,12 +21,12 @@ export default function SigninScreen() {
 
     useEffect(() => {
         if (auth.isAuthenticated) {
-            console.log(auth.user)
-            router.navigate('/home/home')
+            //router.navigate("/main")
         }
-    }, [
-        auth.isAuthenticated
-    ])
+       
+        console.log(auth.user?.uid)
+        
+    }, [auth.isAuthenticated])
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -49,9 +49,7 @@ export default function SigninScreen() {
     return (
         <ThemedView style={styles.container}>
             <View style={[styles.form, { backgroundColor: theme.background }]}>
-                <ThemedText style={styles.heading}>
-                    Sign in to your account
-                </ThemedText>
+                <ThemedText style={styles.heading}>Sign in to your account</ThemedText>
                 <ThemedText>Email</ThemedText>
                 <ThemedInput
                     style={
@@ -73,12 +71,22 @@ export default function SigninScreen() {
                     valid={validPassword}
                 />
                 <ThemedButton
-                    text="Login"
-                    valid={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? true : false}
-                    handler={() => auth.signIn(email, password)}
-                    disabled={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? false : true}
+                    text="Sign in"
+                    valid={
+                        (validEmail === ValidationStates.VALID
+                            && validPassword === ValidationStates.VALID) ? true : false}
+                    handler={() => {
+                        auth.signIn(email, password)
+                            .then((response) => {
+                                console.log(response)
+
+                            })
+
+                    }}
+                    disabled={(validEmail === ValidationStates.VALID
+                        && validPassword === ValidationStates.VALID) ? false : true}
                 />
-                <Link href="/" replace >
+                <Link href="/">
                     <ThemedText>Don't have an account? Go to Signup</ThemedText>
                 </Link>
             </View>

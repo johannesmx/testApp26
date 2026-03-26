@@ -1,6 +1,6 @@
 import { View, StyleSheet } from 'react-native'
 import { useState, useEffect } from 'react'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
 import { useThemeColors } from '@/hooks/useThemeColors'
 import { ThemedText } from '@/components/ThemedText'
@@ -8,26 +8,23 @@ import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
-import { router } from 'expo-router'
+
 
 export default function SignupScreen() {
     const [email, setEmail] = useState<string>("")
     const [validEmail, setValidEmail] = useState<ValidationStates>(ValidationStates.NONE)
     const [password, setPassword] = useState<string>("")
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
-    
+
     const theme = useThemeColors()
     const auth = useFirebaseAuth()
-    
 
+    // effect to check if user is authenticated
     useEffect( () => {
-        if(auth.isAuthenticated) {
-            console.log( auth.user )
-            router.navigate('/home/home')
+        if( auth.isAuthenticated ) {
+            router.navigate("/main")
         }
-    },[
-        auth.isAuthenticated
-    ])
+    }, [auth.isAuthenticated])
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -47,6 +44,7 @@ export default function SignupScreen() {
         }
     }, [password])
 
+    
 
     return (
         <ThemedView style={styles.container}>
@@ -62,7 +60,7 @@ export default function SignupScreen() {
                     value={email}
                     onChangeText={(value: string) => setEmail(value)}
                     placeholder="user@example.com"
-                    valid = {validEmail}
+                    valid={validEmail}
                 />
                 <ThemedText>Password</ThemedText>
                 <ThemedInput 
@@ -74,15 +72,15 @@ export default function SignupScreen() {
                     placeholder="Minimum 8 characters"
                     valid={validPassword}
                 />
-                
                 <ThemedButton 
                     text="Sign up" 
-                    valid={(validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? true : false } 
-                    handler={ () => {
-                        auth.signUp( email, password )
-                    } } 
-                    disabled={ (validEmail === ValidationStates.VALID && validPassword === ValidationStates.VALID) ? false : true }
-                    />
+                    valid={ 
+                        (validEmail === ValidationStates.VALID 
+                            && validPassword === ValidationStates.VALID) ? true : false } 
+                    handler={ () => {auth.signUp(email,password) } } 
+                    disabled={ (validEmail === ValidationStates.VALID 
+                        && validPassword === ValidationStates.VALID) ? false : true }
+                />
                 <Link href="/login">
                     <ThemedText>Have an account? Go to Login</ThemedText>
                 </Link>

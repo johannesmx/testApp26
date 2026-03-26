@@ -6,11 +6,7 @@ import { ThemedText } from "./ThemedText";
 
 export function ThemedButton( props:ThemedButtonProps) {
     const theme = useThemeColors()
-
-    useEffect( () => {
-        console.log("valid "+ props.valid)
-    }, [props.valid])
-
+    
     return(
         <Pressable 
             {...props}

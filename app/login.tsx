@@ -20,6 +20,15 @@ export default function LoginScreen() {
     const auth = useFirebaseAuth()
 
     useEffect(() => {
+        if (auth.isAuthenticated) {
+            //router.navigate("/main")
+        }
+       
+        console.log(auth.user?.uid)
+        
+    }, [auth.isAuthenticated])
+
+    useEffect(() => {
         if (email.indexOf('@') > 0) {
             setValidEmail(ValidationStates.VALID)
         }
@@ -52,7 +61,7 @@ export default function LoginScreen() {
                     valid={validEmail}
                 />
                 <ThemedText>Password</ThemedText>
-                <ThemedInput 
+                <ThemedInput
                     style={
                         (validPassword === ValidationStates.NONE) ? styles.input :
                             (validPassword == ValidationStates.VALID) ? styles.validInput : styles.invalidInput}
@@ -61,21 +70,21 @@ export default function LoginScreen() {
                     placeholder="Minimum 8 characters"
                     valid={validPassword}
                 />
-                <ThemedButton 
-                    text="Sign in" 
-                    valid={ 
-                        (validEmail === ValidationStates.VALID 
-                            && validPassword === ValidationStates.VALID) ? true : false } 
-                    handler={ () => { 
-                        auth.signIn(email,password)
-                        .then((response) => {
-                            console.log(response)
-                            
-                        } )
-                        
-                    } } 
-                    disabled={ (validEmail === ValidationStates.VALID 
-                        && validPassword === ValidationStates.VALID) ? false : true }
+                <ThemedButton
+                    text="Sign in"
+                    valid={
+                        (validEmail === ValidationStates.VALID
+                            && validPassword === ValidationStates.VALID) ? true : false}
+                    handler={() => {
+                        auth.signIn(email, password)
+                            .then((response) => {
+                                console.log(response)
+
+                            })
+
+                    }}
+                    disabled={(validEmail === ValidationStates.VALID
+                        && validPassword === ValidationStates.VALID) ? false : true}
                 />
                 <Link href="/">
                     <ThemedText>Don't have an account? Go to Signup</ThemedText>

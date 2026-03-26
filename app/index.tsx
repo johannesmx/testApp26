@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native'
 import { useState, useEffect } from 'react'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { ValidationStates } from '@/interfaces/ValidationStates'
 import { useThemeColors } from '@/hooks/useThemeColors'
 import { ThemedText } from '@/components/ThemedText'
@@ -8,6 +8,7 @@ import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+
 
 export default function SignupScreen() {
     const [email, setEmail] = useState<string>("")
@@ -17,6 +18,13 @@ export default function SignupScreen() {
 
     const theme = useThemeColors()
     const auth = useFirebaseAuth()
+
+    // effect to check if user is authenticated
+    useEffect( () => {
+        if( auth.isAuthenticated ) {
+            router.navigate("/main")
+        }
+    }, [auth.isAuthenticated])
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {

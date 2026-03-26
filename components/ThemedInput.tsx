@@ -1,6 +1,6 @@
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { TextInput, TextInputProps } from "react-native";
-import { useThemeColors } from "@/hooks/useThemeColors";
+
 import { ValidationStates } from "@/interfaces/ValidationStates";
 
 interface ThemedInputProps extends TextInputProps {

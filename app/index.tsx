@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
-import { useFirebaseAuth } from '@/contexts/firebaseAuthContext'
+import { useAuth } from '@/contexts/firebaseAuthContext'
 
 
 export default function SignupScreen() {
@@ -17,14 +17,14 @@ export default function SignupScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
 
     const theme = useThemeColors()
-    const auth = useFirebaseAuth()
+    const auth = useAuth()
 
     // effect to check if user is authenticated
-    useEffect( () => {
-        if( auth.isAuthenticated ) {
-            router.navigate("/main")
-        }
-    }, [auth.isAuthenticated])
+    // useEffect( () => {
+    //     if( auth.isAuthenticated ) {
+    //         router.navigate("/main")
+    //     }
+    // }, [auth.isAuthenticated])
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {

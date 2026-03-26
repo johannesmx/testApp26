@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
-import { useFirebaseAuth } from '@/contexts/firebaseAuthContext'
+import { useAuth } from '@/contexts/firebaseAuthContext'
 import { router } from 'expo-router'
 
 export default function LoginScreen() {
@@ -17,7 +17,7 @@ export default function LoginScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
 
     const theme = useThemeColors()
-    const auth = useFirebaseAuth()
+    const auth = useAuth()
 
     useEffect(() => {
         if (auth.isAuthenticated) {

@@ -44,5 +44,5 @@ app-example
 
 #api key
 secrets/apikey.txt
-secrets/
+secrets
 config/FirebaseConfig.ts

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from "react"
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { firebaseConfig } from "@/config/FirebaseConfig"
 import {
@@ -15,7 +15,33 @@ interface AuthState {
     error: string | null
 }
 
-export function useFirebaseAuth() {
+interface FirebaseAuthContextValue extends AuthState {
+    isAuthenticated: boolean
+    signIn: (email:string, password:string) => Promise<User | null>
+    signUp: (email:string, password:string) => Promise<User | null>
+    signOff: () => Promise<void>
+}
+
+const FirebaseAuthContext = createContext<FirebaseAuthContextValue | null>( null )
+
+export function FirebaseAuthProvider({children}: {children:ReactNode}) {
+    const auth = useFirebaseAuth()
+    return (
+        <FirebaseAuthContext.Provider value={auth}>
+            { children }
+        </FirebaseAuthContext.Provider>
+    )
+}
+
+export function useAuth():FirebaseAuthContextValue {
+    const context = useContext( FirebaseAuthContext )
+    if( !context ) {
+        throw new Error("must be used withn a FirebaseAuthProvider")
+    }
+    return context
+}
+
+function useFirebaseAuth() {
     const [authState, setAuthState] = useState<AuthState>({ user: null, loading: true, error: null }) 
 
     // effect for updating authentication state of the user
@@ -27,16 +53,6 @@ export function useFirebaseAuth() {
         })
         return unsubscribe
     }, [])
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setAuthState({ user, loading: false, error: null })
-        }, (error) => {
-            setAuthState({ user: null, loading: false, error: error.message })
-        })
-        return unsubscribe  // cleans up on unmount
-    }, [])
-
 
     // signing in with email and password
     const signIn = useCallback(

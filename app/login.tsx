@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedButton } from '@/components/ThemedButton'
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+import { useFirebaseAuth } from '@/contexts/firebaseAuthContext'
 import { router } from 'expo-router'
 
 export default function LoginScreen() {

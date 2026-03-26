@@ -1,13 +1,13 @@
-import { View, StyleSheet } from 'react-native'
-import { useState, useEffect } from 'react'
-import { Link, router } from 'expo-router'
-import { ValidationStates } from '@/interfaces/ValidationStates'
-import { useThemeColors } from '@/hooks/useThemeColors'
+import { ThemedButton } from '@/components/ThemedButton'
+import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
-import { ThemedInput } from '@/components/ThemedInput'
-import { ThemedButton } from '@/components/ThemedButton'
-import { useFirebaseAuth } from '@/hooks/useFirebaseAuth'
+import { useFirebaseAuth } from '@/contexts/useFirebaseAuth'
+import { useThemeColors } from '@/hooks/useThemeColors'
+import { ValidationStates } from '@/interfaces/ValidationStates'
+import { Link, router } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 
 export default function SignupScreen() {

@@ -1,9 +1,7 @@
-import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { StyleSheet } from "react-native";
-import { useFirebaseAuth } from "@/hooks/useFirebaseAuth";
+import { ThemedView } from "@/components/ThemedView";
+import { useFirebaseAuth } from "@/contexts/useFirebaseAuth";
 import { useEffect, useState } from "react";
-import { router } from "expo-router";
 
 export default function HomeScreen() {
     const [authState,setAuthState] = useState<boolean>(true)

@@ -21,7 +21,7 @@ export default function LoginScreen() {
 
     useEffect(() => {
         if (auth.isAuthenticated) {
-            //router.navigate("/main")
+            router.navigate("/(drawer)/")
         }
        
         console.log(auth.user?.uid)

@@ -19,12 +19,12 @@ export default function SignupScreen() {
     const theme = useThemeColors()
     const auth = useAuth()
 
-    // effect to check if user is authenticated
-    // useEffect( () => {
-    //     if( auth.isAuthenticated ) {
-    //         router.navigate("/main")
-    //     }
-    // }, [auth.isAuthenticated])
+    //effect to check if user is authenticated
+    useEffect( () => {
+        if( auth.isAuthenticated ) {
+            router.navigate("/main")
+        }
+    }, [auth.isAuthenticated])
 
     useEffect(() => {
         if (email.indexOf('@') > 0) {

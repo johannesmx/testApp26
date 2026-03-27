@@ -23,8 +23,6 @@ export default function LoginScreen() {
         if (auth.isAuthenticated) {
             router.navigate("/main/home")
         }
-       
-        console.log(auth.user?.uid)
         
     }, [auth.isAuthenticated])
 

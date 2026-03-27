@@ -16,11 +16,11 @@ export default function HomeScreen() {
         }
     }, [auth.isAuthenticated])
 
-    // useEffect(() => {
-    //     if(!authState) {
-    //        // router.replace("/login")
-    //     }
-    // }, [authState])
+    useEffect(() => {
+        if(!authState) {
+           // router.replace("/login")
+        }
+    }, [authState])
 
     return (
         <ThemedView style={{ flex: 1 }}>

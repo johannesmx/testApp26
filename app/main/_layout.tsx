@@ -6,7 +6,7 @@ export default function MainLayout() {
 
     return (
         <Drawer>
-            <Drawer.Screen name="index" options={{
+            <Drawer.Screen name="home" options={{
                 drawerLabel: "Home",
                 title: "Home",
                 drawerStyle: {backgroundColor: theme.background},

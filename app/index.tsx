@@ -22,7 +22,7 @@ export default function SignupScreen() {
     //effect to check if user is authenticated
     useEffect( () => {
         if( auth.isAuthenticated ) {
-            router.navigate("/main")
+            router.navigate("/main/home")
         }
     }, [auth.isAuthenticated])
 

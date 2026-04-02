@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { ThemedButton } from "@/components/ThemedButton";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useFirestore } from "@/contexts/firestoreContext";
+import { useNumbers } from "@/hooks/useNumbers";
 
 
 
@@ -14,6 +16,8 @@ export default function HomeScreen() {
     const [gameVisible, setGameVisible] = useState<boolean>(false)
     const theme = useThemeColors()
     const auth = useAuth()
+    const { data, add, get, update, remove } = useFirestore()
+    const numbers = useNumbers(2)
 
     useEffect(() => {
         if (!auth.isAuthenticated) {
@@ -26,6 +30,8 @@ export default function HomeScreen() {
            router.replace("/login")
         }
     }, [authState])
+
+    const test = numbers.createNumberSet()
 
     return (
         <ThemedView style={[styles.container,{ flex: 1 }]}>
@@ -42,7 +48,8 @@ export default function HomeScreen() {
                 animationType="slide"
             >
                 <ThemedView style={{flex: 1, padding: 15}}>
-                    <ThemedText>Modal Content</ThemedText>
+                    <ThemedText>{test.factor}</ThemedText>
+                    <ThemedText>{test.multiplicand}</ThemedText>
                     <Pressable onPress={()=> {setGameVisible(false)}}>
                         <ThemedText>Close Modal</ThemedText>
                     </Pressable>

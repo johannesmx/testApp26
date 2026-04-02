@@ -1,7 +1,12 @@
-import { ThemedButton } from '@/components/ThemedButton'
+import { View, StyleSheet, Text, TextInput, Pressable } from 'react-native'
+import { useState, useEffect } from 'react'
+import { Link, router } from 'expo-router'
+import { ValidationStates } from '@/interfaces/ValidationStates'
+import { useThemeColors } from '@/hooks/useThemeColors'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedInput } from '@/components/ThemedInput'
+import { ThemedButton } from '@/components/ThemedButton'
 import { useAuth } from '@/contexts/firebaseAuthContext'
 
 
@@ -103,10 +108,9 @@ const styles = StyleSheet.create({
     },
     input: {
         padding: 5,
-        // borderColor: "#CCCCCC",
+        borderColor: "#CCCCCC",
         borderWidth: 2,
         marginBottom: 15,
-        borderRadius: 4
     },
     validInput: {
         padding: 5,
@@ -123,15 +127,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffb8b8",
     },
     button: {
+        backgroundColor: "#333333",
         marginVertical: 15,
         padding: 5,
     },
     buttonText: {
+        color: "#CCCCCC",
         textAlign: "center",
     },
-    buttonEnabled: {
-    },
-    buttonTextEnabled: {},
     buttonDisabled: {
         backgroundColor: "#CCCCCC",
         marginVertical: 15,

@@ -1,7 +1,13 @@
 import {useState, useEffect, useCallback } from 'react'
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { firebaseConfig } from '@/config/FirebaseConfig'
-import { getFirestore, Firestore} from 'firebase/firestore'
+import { 
+    getFirestore, 
+    Firestore,
+    addDoc,
+    updateDoc,
+    setDoc
+} from 'firebase/firestore'
 
 interface DocumentToStore {
     id:string
@@ -10,8 +16,9 @@ interface DocumentToStore {
     start:number
     finish:number
 }
-
+// initialise firebase app if it hasn't been initialised already
 const app: FirebaseApp = (getApps().length === 0) ? initializeApp(firebaseConfig) : getApps()[0]
+// initialise an instance of the firestore database connection
 const db:Firestore = getFirestore(app)
 
 export function useFireStore() {

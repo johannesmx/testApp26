@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { FirebaseAuthProvider } from "@/contexts/useFirebaseAuth";
+import { FirebaseAuthProvider } from "@/contexts/firebaseAuthContext";
 
 export default function RootLayout() {
   const theme = useThemeColors()

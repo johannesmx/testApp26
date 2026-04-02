@@ -2,12 +2,9 @@ import { ThemedButton } from '@/components/ThemedButton'
 import { ThemedInput } from '@/components/ThemedInput'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
-import { useFirebaseAuth } from '@/contexts/useFirebaseAuth'
-import { useThemeColors } from '@/hooks/useThemeColors'
-import { ValidationStates } from '@/interfaces/ValidationStates'
-import { Link, router } from 'expo-router'
-import { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { ThemedInput } from '@/components/ThemedInput'
+import { ThemedButton } from '@/components/ThemedButton'
+import { useAuth } from '@/contexts/firebaseAuthContext'
 
 
 export default function SignupScreen() {
@@ -17,12 +14,12 @@ export default function SignupScreen() {
     const [validPassword, setValidPassword] = useState<ValidationStates>(ValidationStates.NONE)
 
     const theme = useThemeColors()
-    const auth = useFirebaseAuth()
+    const auth = useAuth()
 
-    // effect to check if user is authenticated
+    //effect to check if user is authenticated
     useEffect( () => {
         if( auth.isAuthenticated ) {
-            router.navigate("/main")
+            router.navigate("/main/home")
         }
     }, [auth.isAuthenticated])
 

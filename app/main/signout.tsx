@@ -1,7 +1,6 @@
 import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { useAuth } from "@/contexts/useFirebaseAuth";
+import { StyleSheet } from "react-native";
+import { useAuth } from "@/contexts/firebaseAuthContext";
 import { router } from "expo-router";
 import { useEffect } from "react";
 

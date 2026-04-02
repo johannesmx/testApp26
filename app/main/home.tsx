@@ -1,11 +1,13 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useFirebaseAuth } from "@/contexts/useFirebaseAuth";
+import { ThemedText } from "@/components/ThemedText";
+import { StyleSheet } from "react-native";
+import { useAuth } from "@/contexts/firebaseAuthContext";
 import { useEffect, useState } from "react";
 
 export default function HomeScreen() {
     const [authState,setAuthState] = useState<boolean>(true)
-    const auth = useFirebaseAuth()
+    const auth = useAuth()
 
     useEffect(() => {
         if (!auth.isAuthenticated) {
@@ -14,11 +16,11 @@ export default function HomeScreen() {
         }
     }, [auth.isAuthenticated])
 
-    // useEffect(() => {
-    //     if(!authState) {
-    //        // router.replace("/login")
-    //     }
-    // }, [authState])
+    useEffect(() => {
+        if(!authState) {
+           // router.replace("/login")
+        }
+    }, [authState])
 
     return (
         <ThemedView style={{ flex: 1 }}>

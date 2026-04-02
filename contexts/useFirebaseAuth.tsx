@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:contexts/useFirebaseAuth.tsx
-import { useState, useEffect, useCallback, createContext, useContext } from "react"
-========
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from "react"
->>>>>>>> main:contexts/firebaseAuthContext.tsx
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { firebaseConfig } from "@/config/FirebaseConfig"
 import {
@@ -21,12 +17,6 @@ interface AuthState {
 
 interface FirebaseAuthContextValue extends AuthState {
     isAuthenticated: boolean
-<<<<<<<< HEAD:contexts/useFirebaseAuth.tsx
-    signIn: (email: string, password: string) => Promise<User | null>
-    signUp: (email: string, password: string) => Promise<User | null>
-    signOff: () => Promise<void>
-}
-========
     signIn: (email:string, password:string) => Promise<User | null>
     signUp: (email:string, password:string) => Promise<User | null>
     signOff: () => Promise<void>
@@ -53,33 +43,10 @@ export function useAuth():FirebaseAuthContextValue {
 
 function useFirebaseAuth() {
     const [authState, setAuthState] = useState<AuthState>({ user: null, loading: true, error: null }) 
->>>>>>>> main:contexts/firebaseAuthContext.tsx
 
-const FirebaseAuthContext = createContext<FirebaseAuthContextValue | null>(null)
-
-export function FirebaseAuthProvider({ children }: { children: React.ReactNode }) {
-    const auth = useFirebaseAuth()
-    return (
-        <FirebaseAuthContext.Provider value={auth}>
-            {children}
-        </FirebaseAuthContext.Provider>
-    )
-}
-
-export function useAuth(): FirebaseAuthContextValue {
-    const context = useContext(FirebaseAuthContext)
-    if (!context) {
-        throw new Error("useAuth must be used within a FirebaseAuthProvider")
-    }
-    return context
-}
-
-function useFirebaseAuth(): FirebaseAuthContextValue {
-    const [authState, setAuthState] = useState<AuthState>({ user: null, loading: true, error: null })
-
-<<<<<<<< HEAD:contexts/useFirebaseAuth.tsx
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+    // effect for updating authentication state of the user
+    useEffect( () => {
+        const unsubscribe = onAuthStateChanged( auth, (user) => {
             setAuthState({ user, loading: false, error: null })
         }, (error) => {
             setAuthState({ user: null, loading: false, error: error.message })
@@ -87,17 +54,18 @@ function useFirebaseAuth(): FirebaseAuthContextValue {
         return unsubscribe
     }, [])
 
-========
     // signing in with email and password
->>>>>>>> main:contexts/firebaseAuthContext.tsx
     const signIn = useCallback(
         async (email: string, password: string): Promise<User | null> => {
             setAuthState((prev) => ({ ...prev, loading: true, error: null }))
             try {
-                const { user }: UserCredential = await signInWithEmailAndPassword(auth, email, password)
+                const { user }: UserCredential = await signInWithEmailAndPassword(
+                    auth, email, password
+                )
                 setAuthState({ user, loading: false, error: null })
                 return user
-            } catch (error) {
+            }
+            catch (error) {
                 const message = (error as Error).message
                 setAuthState((prev) => ({ ...prev, loading: false, error: message }))
                 return null
@@ -106,13 +74,17 @@ function useFirebaseAuth(): FirebaseAuthContextValue {
         []
     )
 
+    // signing up
     const signUp = useCallback(
         async (email: string, password: string): Promise<User | null> => {
             try {
-                const { user }: UserCredential = await createUserWithEmailAndPassword(auth, email, password)
+                const { user }: UserCredential = await createUserWithEmailAndPassword(
+                    auth, email, password
+                )
                 setAuthState({ user, loading: false, error: null })
                 return user
-            } catch (error) {
+            }
+            catch (error) {
                 const message = (error as Error).message
                 setAuthState((prev) => ({ ...prev, loading: false, error: message }))
                 return null
@@ -122,16 +94,20 @@ function useFirebaseAuth(): FirebaseAuthContextValue {
     )
 
     const signOff = useCallback(async (): Promise<void> => {
-        setAuthState((prev) => ({ ...prev, loading: true, error: null }))
+        setAuthState((prev) => ({ ...prev, loading: true, error: null}))
         try {
             await signOut(auth)
-            setAuthState({ user: null, loading: false, error: null })
-        } catch (error) {
+            setAuthState({ user:null, loading: false, error: null})
+          
+        }
+        catch (error) {
             const message = (error as Error).message
             setAuthState((prev) => ({ ...prev, loading: false, error: message }))
         }
-    }, [])
-
+        console.log("authstate " + authState)
+    },
+        []
+    )
     return {
         ...authState,
         isAuthenticated: !!authState.user,

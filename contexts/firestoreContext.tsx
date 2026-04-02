@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, createContext, useContext, ReactNode } from 'react'
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { firebaseConfig } from '@/config/FirebaseConfig'
 import {
@@ -12,21 +12,27 @@ import {
     collection,
 } from 'firebase/firestore'
 
-interface DocumentToStore {
-    id: string
-    number: number
-    multiplier: number
-    start: number
-    finish: number
+import { type AppDoc } from '@/interfaces/AppDocType'
+
+
+
+interface FirestoreContextType {
+    data: AppDoc[] | null
+    add: (document: AppDoc, path: string) => Promise<string>
+    update: (id: string, path: string, data: AppDoc) => Promise<void>
+    remove: (id: string, path: string) => Promise<void>
+    get: (path: string) => Promise<AppDoc[]>
 }
 
 const app: FirebaseApp = (getApps().length === 0) ? initializeApp(firebaseConfig) : getApps()[0]
 const db: Firestore = getFirestore(app)
 
-export function useFireStore() {
-    const [data, setData] = useState<DocumentToStore[] | null>(null)
+const FirestoreContext = createContext<FirestoreContextType | null>(null)
 
-    const add = useCallback(async (document: DocumentToStore, path: string) => {
+export function FirestoreProvider({ children }: { children: ReactNode }) {
+    const [data, setData] = useState<AppDoc[] | null>(null)
+
+    const add = useCallback(async (document: AppDoc, path: string): Promise<string> => {
         try {
             const colRef = collection(db, path)
             const docRef = await addDoc(colRef, document)
@@ -37,7 +43,7 @@ export function useFireStore() {
         }
     }, [])
 
-    const update = useCallback(async (id: string, path: string, data: DocumentToStore) => {
+    const update = useCallback(async (id: string, path: string, data: AppDoc): Promise<void> => {
         try {
             const docRef = doc(db, path, id)
             await updateDoc(docRef, { ...data })
@@ -47,7 +53,7 @@ export function useFireStore() {
         }
     }, [])
 
-    const remove = useCallback(async (id: string, path: string) => {
+    const remove = useCallback(async (id: string, path: string): Promise<void> => {
         try {
             const docRef = doc(db, path, id)
             await deleteDoc(docRef)
@@ -57,14 +63,14 @@ export function useFireStore() {
         }
     }, [])
 
-    const get = useCallback(async (path: string) => {
+    const get = useCallback(async (path: string): Promise<AppDoc[]> => {
         try {
             const colRef = collection(db, path)
             const snapshot = await getDocs(colRef)
             const documents = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            })) as DocumentToStore[]
+            })) as AppDoc[]
             setData(documents)
             return documents
         } catch (error) {
@@ -73,11 +79,17 @@ export function useFireStore() {
         }
     }, [])
 
-    return {
-        data,
-        add,
-        update,
-        remove,
-        get
+    return (
+        <FirestoreContext.Provider value={{ data, add, update, remove, get }}>
+            {children}
+        </FirestoreContext.Provider>
+    )
+}
+
+export function useFirestore(): FirestoreContextType {
+    const context = useContext(FirestoreContext)
+    if (!context) {
+        throw new Error('useFirestore must be used within a FirestoreProvider')
     }
+    return context
 }

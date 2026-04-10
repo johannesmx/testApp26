@@ -12,14 +12,14 @@ import {
     collection
 } from 'firebase/firestore'
 
-import { type AppDoc } from '@/interfaces/AppDocType'
+import { type TestDoc } from '@/interfaces/TestDoc'
 
 interface FirestoreContextType {
-    data: AppDoc[] | null
-    add: (document:AppDoc, path:string) => Promise<string>
-    update: ( id:string, path:string, data:AppDoc) => Promise<void>
+    data: TestDoc[] | null
+    add: (document:TestDoc, path:string) => Promise<string>
+    update: ( id:string, path:string, data:TestDoc) => Promise<void>
     remove: (id:string, path:string) => Promise<void>
-    get: (path:string) =>Promise<AppDoc[]>
+    get: (path:string) =>Promise<TestDoc[]>
 }
 
 
@@ -29,9 +29,9 @@ const db:Firestore = getFirestore(app)
 const FirestoreContext = createContext<FirestoreContextType | null>(null)
 
 export function FirestoreProvider( {children}:{ children:ReactNode}) {
-    const[ data, setData ] = useState<AppDoc[] | null >(null)
+    const[ data, setData ] = useState<TestDoc[] | null >(null)
 
-    const add = useCallback( async (document:AppDoc, path:string):Promise<string> => {
+    const add = useCallback( async (document:TestDoc, path:string):Promise<string> => {
         try {
             const colRef = collection( db, path )
             const docRef = await addDoc(colRef, document)
@@ -43,7 +43,7 @@ export function FirestoreProvider( {children}:{ children:ReactNode}) {
         }
     }, [] )
 
-    const update = useCallback( async (id:string,path:string, data:AppDoc ):Promise<void> => {
+    const update = useCallback( async (id:string,path:string, data:TestDoc ):Promise<void> => {
         try {
             const docRef = doc(db, path, id )
             await updateDoc( docRef, {...data} )
@@ -65,14 +65,14 @@ export function FirestoreProvider( {children}:{ children:ReactNode}) {
         }
     }, [])
 
-    const get = useCallback( async ( path:string ):Promise<AppDoc[]> => {
+    const get = useCallback( async ( path:string ):Promise<TestDoc[]> => {
         try {
             const colRef = collection( db, path )
             const snapshot = await getDocs(colRef)
             const documents = snapshot.docs.map( doc => ({
                 id: doc.id,
                 ...doc.data()
-            })) as AppDoc[]
+            })) as TestDoc[]
             setData( documents )
             return documents
         }

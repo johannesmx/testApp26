@@ -4,8 +4,8 @@ export const AppTheme = {
         background: "#040F16",
         buttonbg: "#001242",
         border: "#b6b5b5",
-        valid: "#34a101",
-        invalid: "#aa3b1a",
+        valid: "#1f6300",
+        invalid: "#982707",
         placeholder: "#cccccc"
     },
     light: {

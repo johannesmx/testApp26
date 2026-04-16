@@ -22,11 +22,11 @@ const app: FirebaseApp = (getApps().length === 0) ? initializeApp(firebaseConfig
 const db:Firestore = getFirestore(app)
 
 export function useFireStore() {
-    const[data,setData] = useState<DocumentToStore[] | null>( null )
+    const[data,setData] = useState<DocumentToStore[] | null>( [] )
 
     const add = ( document:DocumentToStore, path:string ) => {
         // add a document to Firestore
-
+        
     }
 
     const update = ( id:string, path:string, data:DocumentToStore )  => {

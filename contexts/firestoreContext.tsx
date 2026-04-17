@@ -13,10 +13,11 @@ import {
 } from 'firebase/firestore'
 
 import { type TestDoc } from '@/interfaces/TestDoc'
+import { type UserDoc } from '@/interfaces/UserDoc'
 
 interface FirestoreContextType {
     data: TestDoc[] | null
-    add: (document:TestDoc, path:string) => Promise<string>
+    add: (document:UserDoc, path:string) => Promise<string>
     update: ( id:string, path:string, data:TestDoc) => Promise<void>
     remove: (id:string, path:string) => Promise<void>
     get: (path:string) =>Promise<TestDoc[]>
@@ -31,7 +32,7 @@ const FirestoreContext = createContext<FirestoreContextType | null>(null)
 export function FirestoreProvider( {children}:{ children:ReactNode}) {
     const[ data, setData ] = useState<TestDoc[] | null >(null)
 
-    const add = useCallback( async (document:TestDoc, path:string):Promise<string> => {
+    const add = useCallback( async (document:UserDoc, path:string):Promise<string> => {
         try {
             const colRef = collection( db, path )
             const docRef = await addDoc(colRef, document)

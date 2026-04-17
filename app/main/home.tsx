@@ -1,6 +1,7 @@
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { StyleSheet, FlatList, View } from "react-native";
+import { ThemedInput } from "@/components/ThemedInput";
+import { StyleSheet, FlatList, View, Modal, Pressable, TextInput } from "react-native";
 import { useAuth } from "@/contexts/firebaseAuthContext";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
@@ -12,10 +13,14 @@ import { TestDoc } from "@/interfaces/TestDoc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { Link } from "expo-router";
+import { ThemedButton } from "@/components/ThemedButton";
 
 export default function HomeScreen() {
     const [authState, setAuthState] = useState<boolean>(true)
     const [sharedData, setSharedData] = useState<TestDoc[] | null>(null)
+    const [modalVisible,setModalVisible] = useState<boolean>( false )
+    const [itemName,setItemName] = useState<string>("")
+
     const auth = useAuth()
     const firestore = useFirestore()
     const theme = useThemeColors()
@@ -40,6 +45,10 @@ export default function HomeScreen() {
         })
     }, [])
 
+    useEffect(() => {
+        console.log(itemName)
+    },[itemName])
+
     const ItemView = (props: TestDoc) => (
         <Link href={
             {
@@ -54,9 +63,18 @@ export default function HomeScreen() {
         </Link>
     )
 
+    const ItemInputHandler = async () => {
+        // define path which contains user uid
+        // console.log( auth.user?.uid)
+        const path = `usedata/${auth.user?.uid}/items`
+        console.log(path)
+        const item = await firestore.add({name:itemName, description: "item description"}, path )
+        console.log(item)
+        setItemName("")
+        setModalVisible(false)
+    }
 
     return (
-
         <SafeAreaProvider>
             <SafeAreaView style={{ flex: 1 }}>
                 <ThemedView style={{ flex: 1 }}>
@@ -68,6 +86,20 @@ export default function HomeScreen() {
                         ListEmptyComponent={<ListEmpty />}
                         ItemSeparatorComponent={ListSeparator}
                     />
+                    <Modal visible={modalVisible} animationType="slide" transparent={false}>
+                        <ThemedView style={styles.modalview}>
+                            <ThemedText>Add Item</ThemedText>
+                            <ThemedText>Name</ThemedText>
+                            <TextInput style={{color: theme.text}} value={itemName} onChangeText={(val)=>setItemName(val)}/>
+                            <ThemedButton text="Save" disabled={false} valid={true} handler={ItemInputHandler}  />
+                        </ThemedView>
+                        <Pressable style={styles.closebutton} onPress={()=> setModalVisible(false)}>
+                            <Ionicons name="close" size={32} color={theme.text} />
+                        </Pressable>
+                    </Modal>
+                    <Pressable style={styles.openbutton} onPress={()=> setModalVisible(true)}>
+                        <Ionicons name="add" size={32} color={theme.text} />
+                    </Pressable>
                 </ThemedView>
             </SafeAreaView>
         </SafeAreaProvider>
@@ -80,5 +112,20 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
-    }
+    },
+    openbutton: {
+        position: "absolute",
+        bottom: 30,
+        right: 30,
+    },
+     closebutton: {
+        position: "absolute",
+        top: 30,
+        right: 30,
+    },
+    modalview: {
+        flex: 1,
+        paddingVertical: 50,
+        paddingHorizontal: 10
+    },
 })

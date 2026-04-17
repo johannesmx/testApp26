@@ -21,6 +21,11 @@ export default function MainLayout() {
                     drawerLabel: "Sign out",
                     title: "Sign out"
                 }} />
+                <Drawer.Screen name="[id]" options={{
+                    drawerLabel: () => null, 
+                    title: null, 
+                    drawerItemStyle: {display: "none"} 
+                    }}/>
             </Drawer>
         </FirestoreProvider>
     )
